@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: connect_db
+    environment:
+      POSTGRES_DB: connect_db
+      POSTGRES_USER: connect_user
+      POSTGRES_PASSWORD: connect_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U connect_user -d connect_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    container_name: connect_backend
+    command:
+      - sh
+      - -c
+      - python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --reload --access-logfile - --error-logfile -
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
+      - backend_media:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    image: node:20-alpine
+    container_name: connect_web
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --hostname 0.0.0.0"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - ./web:/app
+      - web_node_modules:/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  backend_media:
+  web_node_modules:

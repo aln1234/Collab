@@ -1,0 +1,16 @@
+{
+  "name": "Connect",
+  "short_name": "Connect",
+  "description": "Creator marketplace for brand campaigns and content approvals.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
