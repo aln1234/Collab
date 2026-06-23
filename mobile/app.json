@@ -1,16 +1,18 @@
 {
   "expo": {
     "name": "Connect",
-    "slug": "connect-mobile",
+    "slug": "connect",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "connect",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
+      "bundleIdentifier": "com.albin.connect",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.albin.connect",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -30,7 +32,14 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
-    ]
+      ],
+      "expo-font"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "435950b4-77d6-4645-931f-7ca931a2b7c5"
+      }
+    }
   }
 }

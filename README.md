@@ -1,255 +1,185 @@
-# Connect
-
-## Project Overview
-
-Connect is a creator economy marketplace MVP. Brands create paid creator campaigns, creators apply and submit content, and brands review approvals while payment status is tracked manually for the MVP.
-
-The project now has a Next.js web app and an Expo React Native mobile app. Both clients use the same Django REST API.
-
-## Current MVP Goal
-
-Creator finds campaign -> applies -> brand approves -> creator submits content -> brand approves or requests revision -> payment status is manually tracked.
-
-## Tech Stack
-
-- Next.js
-- TypeScript
-- Tailwind CSS
-- Django
-- Django REST Framework
-- PostgreSQL
-- JWT Auth with SimpleJWT
-- Django Admin
-- Docker
-- Expo React Native
-- Expo Router
-- Expo SecureStore
-
-## Project Structure
-
-```text
-connect/
-  web/
-    src/app/
-      (public)/
-      (auth)/
-      (creator)/
-      (brand)/
-      (admin)/
-    src/components/
-    src/features/
-    src/lib/
-    src/hooks/
-    src/types/
-    src/config/
-    package.json
-    .env.example
-  mobile/
-    app/
-      (auth)/
-      (brand)/
-      (creator)/
-      (admin)/
-      _layout.tsx
-      index.tsx
-    src/
-      components/
-      features/
-      lib/
-      stores/
-      types/
-    package.json
-    .env.example
-  backend/
-    config/
-      settings/
-      urls.py
-      wsgi.py
-      asgi.py
-    apps/
-      accounts/
-      brands/
-      creators/
-      campaigns/
-      applications/
-      submissions/
-      payments/
-      notifications/
-      core/
-    media/
-    static/
-    manage.py
-    requirements.txt
-    .env.example
-  docs/
-    PROJECT_STATUS.md
-    FLOW.md
-    TROUBLESHOOTING.md
-  docker-compose.yml
-  README.md
-  .gitignore
-```
-
 ## Completed So Far
 
 ### Root Setup
 
-- [x] Monorepo structure exists with `web/` and `backend/`
-- [x] Root `docker-compose.yml` exists
-- [x] Root `.gitignore` exists
-- [x] Root README exists
-- [x] `docs/` project documentation folder exists
+* [x] Monorepo structure exists with `web/`, `mobile/`, and `backend/`
+* [x] Root `docker-compose.yml` exists
+* [x] Root `.gitignore` exists
+* [x] Root README exists
+* [x] `docs/` project documentation folder exists
 
 ### Backend Setup
 
-- [x] Django project exists under `backend/`
-- [x] Settings are split into `base.py`, `development.py`, and `production.py`
-- [x] DRF is installed and configured
-- [x] CORS is installed and configured
-- [x] SimpleJWT is installed and configured
-- [x] drf-spectacular is installed and configured
-- [x] Health endpoint exists
-- [x] All expected app folders exist
-- [x] Main marketplace models exist
-- [x] Serializers exist
-- [x] Views exist
-- [x] App URL files exist
-- [x] Admin registrations exist
-- [x] Initial migrations exist
-- [x] `python manage.py check` passes
-- [x] Environment helpers exist for strings, booleans, and comma-separated lists
-- [x] Backend console logging is configured for readable Docker logs
-- [x] DRF API errors use a consistent response shape
-- [x] Missing or short development `SECRET_KEY` values no longer trigger the SimpleJWT key-length warning
+* [x] Django project exists under `backend/`
+* [x] Settings are split into `base.py`, `development.py`, and `production.py`
+* [x] DRF is installed and configured
+* [x] CORS is installed and configured
+* [x] SimpleJWT is installed and configured
+* [x] drf-spectacular is installed and configured
+* [x] Health endpoint exists
+* [x] All expected app folders exist
+* [x] Main marketplace models exist
+* [x] Serializers exist
+* [x] Views exist
+* [x] App URL files exist
+* [x] Admin registrations exist
+* [x] Initial migrations exist
+* [x] `python manage.py check` passes
+* [x] Environment helpers exist for strings, booleans, and comma-separated lists
+* [x] Backend console logging is configured for readable Docker logs
+* [x] DRF API errors use a consistent response shape
+* [x] Missing or short development `SECRET_KEY` values no longer trigger the SimpleJWT key-length warning
 
 ### Frontend Setup
 
-- [x] Next.js App Router app exists under `web/`
-- [x] TypeScript is configured
-- [x] Tailwind CSS is configured
-- [x] ESLint is configured
-- [x] Mobile-first route groups exist
-- [x] Reusable UI/layout components exist
-- [x] API client exists
-- [x] Token storage abstraction exists
-- [x] Zustand auth store exists
-- [x] React Query provider exists
-- [x] Public, auth, creator, brand, and admin pages exist
-- [x] Frontend auth is wired to live backend auth endpoints
-- [x] Protected route behavior exists for brand, creator, and admin areas
-- [x] Frontend API errors are normalized into a user-friendly shape
-- [x] App-level loading, not-found, and error screens exist
-- [x] Navbar/header reacts to authenticated state and shows Sign out
-- [x] Brand, creator, and admin dashboards show live authenticated user context
-- [x] Campaign list/detail/create/edit screens use live backend data through React Query
-- [x] Creator campaign browse, detail, apply, and applications pages use live backend data
-- [x] Sonner is configured for global toast notifications
-- [x] `npm run lint` passes
+* [x] Next.js App Router app exists under `web/`
+* [x] TypeScript is configured
+* [x] Tailwind CSS is configured
+* [x] ESLint is configured
+* [x] Mobile-first route groups exist
+* [x] Reusable UI/layout components exist
+* [x] API client exists
+* [x] Token storage abstraction exists
+* [x] Zustand auth store exists
+* [x] React Query provider exists
+* [x] Public, auth, creator, brand, and admin pages exist
+* [x] Frontend auth is wired to live backend auth endpoints
+* [x] Protected route behavior exists for brand, creator, and admin areas
+* [x] Frontend API errors are normalized into a user-friendly shape
+* [x] App-level loading, not-found, and error screens exist
+* [x] Navbar/header reacts to authenticated state and shows Sign out
+* [x] Brand, creator, and admin dashboards show live authenticated user context
+* [x] Campaign list/detail/create/edit screens use live backend data through React Query
+* [x] Creator campaign browse, detail, apply, and applications pages use live backend data
+* [x] Sonner is configured for global toast notifications
+* [x] `npm run lint` passes
 
 ### Mobile Setup
 
-- [x] Expo React Native app exists under `mobile/`
-- [x] Expo Router is configured
-- [x] TypeScript is configured
-- [x] React Query is configured
-- [x] Zustand auth store exists
-- [x] JWT tokens are stored with Expo SecureStore
-- [x] Mobile API client connects to the existing Django API
-- [x] Mobile login/register use live backend auth endpoints
-- [x] Mobile role redirects exist for brand, creator, and admin users
-- [x] Brand, creator, and admin mobile dashboards show live authenticated user context
-- [x] Mobile toast notifications are configured with `react-native-toast-message`
-- [x] `npm run lint` passes in `mobile/`
+* [x] Expo React Native app exists under `mobile/`
+* [x] Expo Router is configured
+* [x] TypeScript is configured
+* [x] React Query is configured
+* [x] Zustand auth store exists
+* [x] JWT tokens are stored with Expo SecureStore
+* [x] Mobile API client connects to the existing Django API
+* [x] Mobile login/register use live backend auth endpoints
+* [x] Mobile register includes backend-required `full_name`
+* [x] Mobile auth loads the current user from `/api/auth/me/`
+* [x] Mobile role redirects exist for brand, creator, and admin users
+* [x] Mobile route protection blocks unauthenticated access to protected app routes
+* [x] Mobile logout clears tokens/auth state and redirects back to auth
+* [x] Mobile toast notifications are configured with `react-native-toast-message`
+* [x] `npm run lint` passes in `mobile/`
+* [x] `npx tsc --noEmit` passes in `mobile/`
 
-### Database Setup
+### Mobile Creator Flow
 
-- [x] PostgreSQL service exists in Docker Compose
-- [x] Backend service depends on healthy PostgreSQL
-- [x] Database URL is environment-driven
-- [x] Initial migrations apply in Docker
+* [x] Creator dashboard screen exists
+* [x] Creator campaign browse screen exists
+* [x] Creator campaign detail screen exists
+* [x] Creator campaign browse uses live backend campaign data
+* [x] Creator campaign cards navigate using real campaign UUIDs
+* [x] Creator campaign detail uses live backend campaign detail data
+* [x] Creator apply button posts to the live backend using the real campaign UUID
+* [x] Apply flow handles loading, success, duplicate application, closed campaign, authentication, and backend error states
+* [x] Successful applications invalidate the application list cache
+* [x] My Applications screen uses live backend data
+* [x] My Applications shows real pending, approved, and rejected application statuses
+* [x] My Applications shows nested campaign and brand data when returned by the backend
+* [x] My Applications has loading, empty, error, retry, and pull-to-refresh states
+* [x] Static application fixtures and fake submission navigation were removed from the live applications flow
+* [ ] Only the first paginated page of creator applications is currently displayed
+* [ ] Creator content submission flow still needs live backend wiring
+* [ ] Creator submissions and payments still need live backend wiring
 
-### Authentication
+### Mobile Brand Flow
 
-- [x] Custom `User` model exists
-- [x] User roles exist: `BRAND`, `CREATOR`, `ADMIN`
-- [x] Register endpoint exists
-- [x] JWT token and refresh endpoints exist
-- [x] `/api/auth/me/` exists
-- [x] Login stores tokens, loads `/api/auth/me/`, saves user state, and redirects by role
-- [x] Register creates the user, logs in, loads `/api/auth/me/`, saves user state, and redirects by role
-- [x] Existing token initialization loads `/api/auth/me/` or clears invalid tokens
-- [x] Auth store centralizes sign in, sign up, token hydration, and logout
-- [x] Sign out clears tokens, resets auth state, shows a toast, and redirects
+* [x] Brand dashboard prototype exists
+* [x] Brand campaign creation/details prototype screens exist
+* [x] Brand creator discovery/profile prototype screens exist
+* [x] Brand messages, notifications, and profile screens exist
+* [ ] Brand campaign list/detail screens still need live backend wiring on mobile
+* [ ] Brand application review needs live backend wiring on mobile
+* [ ] Brand approve/reject application actions need live backend wiring on mobile
+* [ ] Brand content approval/revision flow needs live backend wiring on mobile
+* [ ] Brand payment tracking UI needs live backend wiring on mobile
 
-### Campaign Flow
+### Mobile UI Prototype
 
-- [x] Campaign model exists
-- [x] Campaign serializer exists
-- [x] Campaign list/create/detail/update views exist
-- [x] Campaign service and selector files exist
-- [x] Backend API paths are aligned with the intended frontend contract
-- [x] Public campaign list/detail pages use live backend campaign data
-- [x] Brand campaign list uses live brand-owned campaign data
-- [x] Brand campaign create, detail, and edit pages are wired to backend CRUD endpoints
-- [ ] Full browser-tested campaign CRUD flow still needs a manual pass
+The Expo mobile app has a clickable UI prototype for the main creator, brand, and admin marketplace flows. Auth, creator campaign browsing/detail, creator apply, and creator My Applications are now connected to live backend data. Some remaining brand, submission, payment, notification, messaging, and profile screens are still prototype-first and may use mock data until their API wiring is completed.
 
-### Creator Flow
-
-- [x] Creator profile model exists
-- [x] Creator profile API view exists
-- [x] Creator dashboard/profile/applications/submissions/payments pages exist
-- [x] Creator campaign browse and detail pages use live campaign data
-- [x] Creator apply flow posts to the live backend and prevents duplicate applications in the UI
-- [x] Creator applications page uses live backend data
-- [ ] Creator submissions/payments still use static sample data
-- [ ] Creator content submission flow needs end-to-end UI wiring
-
-### Brand Flow
-
-- [x] Brand profile model exists
-- [x] Brand profile API view exists
-- [x] Brand dashboard/profile/campaigns/applications/submissions/payments pages exist
-- [ ] Brand pages still use static sample marketplace data outside live auth context
-- [ ] Brand approval/revision/payment actions need end-to-end UI wiring
-
-### Admin Flow
-
-- [x] Django Admin is enabled
-- [x] Marketplace models are registered in Django Admin
-- [ ] Disputes are handled manually only; there is no `Dispute` model yet
-
-### Documentation
-
-- [x] Root README updated
-- [x] Detailed project status doc created
-- [x] Product flow doc created
+* [x] Welcome/onboarding screen exists
+* [x] Create account and role selection screen exists
+* [x] Existing Lottie animation is used from `mobile/assets/lottie/toogle.json`
+* [x] Real login screen exists
+* [x] Real registration flow exists
+* [x] Logout option exists
+* [x] Creator setup placeholder exists
+* [x] Brand setup placeholder exists
+* [x] Creator dashboard prototype exists
+* [x] Creator browse campaigns screen exists and uses live data
+* [x] Creator campaign detail screen exists and uses live data
+* [x] Creator apply flow posts to the backend
+* [x] My Applications screen exists and uses live data
+* [x] Submit content prototype screen exists
+* [x] Content approval chat prototype exists
+* [x] Brand dashboard prototype exists
+* [x] New campaign prototype exists
+* [x] Campaign details/applicants prototype exists
+* [x] Find creators/discovery prototype exists
+* [x] Creator profile detail prototype exists
+* [x] Notification center prototype exists
+* [x] Shared profile/settings prototype exists
+* [x] Admin control center prototype exists
+* [x] Prototype navigation links connect the creator, brand, and admin flows
 
 ## Still To Do
 
-- [ ] Replace remaining non-campaign sample/static frontend data with React Query calls
-- [ ] Build mobile campaign CRUD
-- [ ] Build mobile creator campaign browse/apply flow
-- [ ] Complete frontend forms for brand application status, submission status, and payment status updates
-- [ ] Add a full happy-path MVP test flow
-- [ ] Expand user-friendly error/loading/empty states across marketplace pages
-- [ ] Decide if disputes need a dedicated model or will remain manual admin notes for MVP
-- [ ] Set a real non-empty `SECRET_KEY` in `backend/.env`
+* [ ] Browser-test campaign CRUD as brand from create -> detail -> edit
+* [ ] Browser-test creator campaign browse/apply and duplicate application states
+* [ ] Test mobile auth on physical device, simulator, and Expo Go
+* [ ] Test mobile creator campaign browse/detail/apply end-to-end against local backend
+* [ ] Add pagination or infinite scroll for mobile creator applications
+* [ ] Connect mobile brand campaign list/detail to live backend data
+* [ ] Complete mobile brand application approval/rejection UI wiring
+* [ ] Complete mobile creator content submission UI wiring
+* [ ] Complete mobile brand content approval/revision UI wiring
+* [ ] Complete mobile manual payment tracking UI wiring
+* [ ] Connect mobile notifications to live backend data
+* [ ] Connect mobile profile setup/edit screens to live backend profile APIs
+* [ ] Add a full happy-path MVP test flow across web, mobile, and backend
+* [ ] Expand user-friendly error/loading/empty states across marketplace pages
+* [ ] Decide if disputes need a dedicated model or will remain manual admin notes for MVP
+* [ ] Set a real non-empty `SECRET_KEY` in `backend/.env`
 
-## Application Flow
+## Creator Flow
 
-### Brand Flow
+* [x] Creator profile model exists
+* [x] Creator profile API view exists
+* [x] Creator dashboard/profile/applications/submissions/payments pages exist
+* [x] Creator campaign browse and detail pages use live campaign data on web
+* [x] Creator apply flow posts to the live backend on web
+* [x] Creator applications page uses live backend data on web
+* [x] Mobile creator campaign browse uses live backend campaign data
+* [x] Mobile creator campaign detail uses live backend campaign detail data
+* [x] Mobile creator apply flow posts to the live backend
+* [x] Mobile creator My Applications screen uses live backend data
+* [ ] Creator submissions/payments still use static sample data in some UI areas
+* [ ] Creator content submission flow needs end-to-end UI wiring
 
-Brand registers/logs in -> creates brand profile -> creates campaign -> reviews creator applications -> approves/rejects creators -> reviews content submissions -> approves content or requests revision -> tracks payment status manually.
+## Brand Flow
 
-### Creator Flow
+* [x] Brand profile model exists
+* [x] Brand profile API view exists
+* [x] Brand dashboard/profile/campaigns/applications/submissions/payments pages exist
+* [x] Brand campaign management exists on web
+* [ ] Brand pages still use static sample marketplace data in some areas outside live auth/campaign context
+* [ ] Mobile brand campaign management still needs live backend wiring
+* [ ] Brand application approval/rejection UI wiring needs completion
+* [ ] Brand approval/revision/payment actions need end-to-end UI wiring
 
-Creator registers/logs in -> creates creator profile -> browses campaigns -> applies to campaign -> waits for approval -> submits content -> receives approval or revision request -> tracks payment status.
-
-### Admin Flow
-
-Admin logs into Django Admin -> manages users -> manages campaigns -> manages applications -> manages submissions -> manages payments -> manages disputes/issues manually.
-
-### API Flow
+## API Flow
 
 The intended frontend API flow is:
 
@@ -262,224 +192,147 @@ The intended frontend API flow is:
 7. Brand updates submission status.
 8. Payment record is tracked manually after approved content.
 
-Campaign CRUD is now live on the web app:
+Campaign and creator application flows are now live on the web app and partially live on the mobile app:
 
-- Public campaign browsing calls `GET /api/campaigns/`.
-- Public campaign detail calls `GET /api/campaigns/:id/`.
-- Brand campaign management calls `GET /api/campaigns/?mine=true`.
-- Brand campaign creation calls `POST /api/campaigns/`.
-- Brand campaign editing calls `PATCH /api/campaigns/:id/`.
-- Creator campaign browsing calls `GET /api/campaigns/`.
-- Creator campaign detail calls `GET /api/campaigns/:id/`.
-- Creator application status checks call `GET /api/creator/applications/`.
-- Creator apply calls `POST /api/campaigns/:id/apply/`.
+* Public campaign browsing calls `GET /api/campaigns/`.
+* Public campaign detail calls `GET /api/campaigns/:id/`.
+* Brand campaign management calls `GET /api/campaigns/?mine=true`.
+* Brand campaign creation calls `POST /api/campaigns/`.
+* Brand campaign editing calls `PATCH /api/campaigns/:id/`.
+* Creator campaign browsing calls `GET /api/campaigns/`.
+* Creator campaign detail calls `GET /api/campaigns/:id/`.
+* Creator application status checks call `GET /api/creator/applications/`.
+* Creator apply calls `POST /api/campaigns/:id/apply/`.
+* Mobile auth calls `POST /api/auth/register/`, `POST /api/auth/token/`, `POST /api/auth/token/refresh/`, and `GET /api/auth/me/`.
+* Mobile creator campaign browse calls `GET /api/campaigns/`.
+* Mobile creator campaign detail calls `GET /api/campaigns/:id/`.
+* Mobile creator apply calls `POST /api/campaigns/:id/apply/`.
+* Mobile creator My Applications calls `GET /api/creator/applications/`.
 
-## API Endpoints
+## Testing Mobile Locally
 
-Status meanings:
-
-- Done: route exists at the intended clean API path and imports successfully.
-- In progress: backend code exists but frontend wiring or end-to-end behavior needs more work.
-- Pending: not implemented yet.
-
-| Status | Intended Endpoint | Current Notes |
-|---|---|---|
-| [x] | `GET /api/health/` | Returns status, product, and environment |
-| [x] | `POST /api/auth/register/` | Implemented |
-| [x] | `POST /api/auth/token/` | Implemented through SimpleJWT |
-| [x] | `POST /api/auth/token/refresh/` | Implemented through SimpleJWT |
-| [x] | `GET /api/auth/me/` | Implemented |
-| [x] | `GET/PUT /api/brand/profile/` | Implemented |
-| [x] | `GET/PUT /api/creator/profile/` | Implemented |
-| [x] | `GET /api/campaigns/` | Implemented |
-| [x] | `POST /api/campaigns/` | Implemented |
-| [x] | `GET /api/campaigns/:id/` | Implemented |
-| [x] | `PATCH /api/campaigns/:id/` | Implemented |
-| [x] | `POST /api/campaigns/:id/apply/` | Implemented |
-| [x] | `GET /api/creator/applications/` | Implemented |
-| [x] | `GET /api/brand/applications/` | Implemented |
-| [x] | `PATCH /api/applications/:id/status/` | Implemented |
-| [x] | `POST /api/campaigns/:id/submissions/` | Implemented |
-| [x] | `GET /api/creator/submissions/` | Implemented |
-| [x] | `GET /api/brand/submissions/` | Implemented |
-| [x] | `PATCH /api/submissions/:id/status/` | Implemented |
-| [x] | `GET /api/payments/` | Implemented |
-| [x] | `PATCH /api/payments/:id/status/` | Implemented |
-| [x] | `GET /api/notifications/` | Implemented |
-| [x] | `PATCH /api/notifications/:id/read/` | Implemented |
-| [x] | `GET /api/schema/` | Implemented |
-| [x] | `GET /api/docs/` | Implemented |
-
-## How to Run Locally
-
-Start the database:
+Run the Expo app:
 
 ```bash
-docker compose up db
+cd mobile
+npm install
+npx expo start
 ```
 
-Run the backend in Docker:
+For physical phone testing, make sure the backend is reachable from the phone. Do not use `localhost` for a physical device.
 
-```bash
-docker compose up --build backend
-```
-
-Or run the backend locally:
+Start Django so it listens on all interfaces:
 
 ```bash
 cd backend
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -r requirements.txt
-python manage.py migrate
 python manage.py runserver 0.0.0.0:8000
 ```
 
-Run migrations:
+Set the mobile API base URL in `mobile/.env`:
 
 ```bash
-cd backend
-python manage.py makemigrations
-python manage.py migrate
+EXPO_PUBLIC_API_BASE_URL=http://YOUR_COMPUTER_LAN_IP:8000/api
 ```
 
-Create a superuser:
+Then restart Expo after changing `.env`:
 
 ```bash
-cd backend
-python manage.py createsuperuser
+cd mobile
+npx expo start --lan --clear
 ```
 
-Create local demo users:
+Main mobile flows to test:
+
+1. Welcome -> Create Account -> register as Creator or Brand.
+2. Sign In -> login with demo Creator, Brand, or Admin.
+3. Confirm protected routes cannot be opened while signed out.
+4. Confirm Logout clears the session and returns to auth.
+5. Creator Dashboard -> Browse Campaigns.
+6. Browse Campaigns -> Campaign Detail using a real campaign UUID.
+7. Campaign Detail -> Apply.
+8. My Applications -> confirm the real application appears with pending/approved/rejected status.
+9. Bell icon -> Notifications prototype.
+10. Profile tab/link -> Profile/Settings prototype.
+
+Remaining prototype-first flows to test visually:
+
+1. Creator Setup.
+2. Submit Content.
+3. Content Approval Chat.
+4. Brand Dashboard.
+5. Brand New Campaign.
+6. Brand Campaign Details/Applicants.
+7. Brand Find Creators.
+8. Admin Control Center.
+
+## Testing Auth Locally
+
+1. Start the backend and web or mobile app.
+2. Register or log in from the auth screens.
+3. Confirm `/api/auth/me/` returns `200` with the current user.
+4. Confirm the web navbar or mobile app changes to the authenticated state.
+5. Confirm the role dashboard shows the authenticated user context where available.
+6. Click or tap Sign out / Logout.
+7. Confirm access and refresh tokens are removed from localStorage on web or SecureStore on mobile.
+8. Confirm the app returns to the signed-out state.
+9. Confirm protected routes cannot be accessed after logout.
+
+## Testing Creator Apply Flow Locally
+
+1. Start backend.
+2. Seed demo users:
 
 ```bash
 cd backend
 python manage.py seed_demo_users
 ```
 
-Or in Docker:
-
-```bash
-docker compose exec backend python manage.py seed_demo_users
-```
-
-Run the web app:
-
-```bash
-cd web
-npm install
-npm run dev
-```
-
-Run the mobile app:
+3. Start mobile:
 
 ```bash
 cd mobile
-npm install
-npm run start
+npx expo start --lan --clear
 ```
 
-You can also run:
+4. Log in as the creator demo user:
 
-```bash
-cd mobile
-npx expo start
+```text
+creator@connect.test
+ConnectDemo123!
 ```
 
-Mobile API base URL examples:
-
-- Web browser or iOS simulator: `http://localhost:8000/api`
-- Android emulator: `http://10.0.2.2:8000/api`
-- Physical phone: `http://YOUR_COMPUTER_LAN_IP:8000/api`
-
-Set this in `mobile/.env`:
-
-```bash
-EXPO_PUBLIC_API_BASE_URL=http://localhost:8000/api
-```
-
-Useful URLs:
-
-- Web app: `http://localhost:3000`
-- Mobile app: run through Expo with `npm run start`
-- API health: `http://localhost:8000/api/health/`
-- API docs: `http://localhost:8000/api/docs/`
-- Django Admin: `http://localhost:8000/admin/`
-
-## Demo Users For Local Testing
-
-Run `python manage.py seed_demo_users` from `backend/` or `docker compose exec backend python manage.py seed_demo_users` from the project root.
-
-These accounts are for local development only:
-
-| Role | Email | Password |
-|---|---|---|
-| Admin | `admin@connect.test` | `ConnectDemo123!` |
-| Brand | `brand@connect.test` | `ConnectDemo123!` |
-| Creator | `creator@connect.test` | `ConnectDemo123!` |
-
-The command also creates or updates simple demo brand and creator profiles.
-
-## Testing Auth Locally
-
-1. Start the backend and web or mobile app.
-2. Register or log in from `/register` or `/login`.
-3. Confirm `/api/auth/me/` returns `200` with the current user.
-4. Confirm the web navbar or mobile screen changes to the authenticated state.
-5. Confirm the role dashboard says `Welcome back` with the current user name or email.
-6. Click Sign out.
-7. Confirm access and refresh tokens are removed from localStorage on web or SecureStore on mobile.
-8. Confirm the app returns to the signed-out state.
-
-## Troubleshooting
-
-If the backend logs show `InsecureKeyLengthWarning`, the Django `SECRET_KEY` is missing or too short for JWT signing. Generate a secure key and place it in `backend/.env`:
-
-```bash
-cd backend
-python - << 'PY'
-from django.core.management.utils import get_random_secret_key
-print(get_random_secret_key())
-PY
-```
-
-Then set:
-
-```bash
-SECRET_KEY=your-generated-secret-key
-```
-
-Inspect Docker logs:
-
-```bash
-docker compose logs backend --tail=100
-docker compose logs web --tail=100
-docker compose logs db --tail=100
-```
-
-For a fuller guide, see `docs/TROUBLESHOOTING.md`.
+5. Open Browse Campaigns.
+6. Tap a campaign.
+7. Tap Apply.
+8. Confirm success state.
+9. Open My Applications.
+10. Confirm the real application appears.
+11. Try applying to the same campaign again.
+12. Confirm the duplicate application error is handled cleanly.
 
 ## Development Notes
 
-- The web app is mobile-first and remains the primary complete frontend.
-- The Expo mobile app currently covers auth and role dashboards only.
-- Stripe is not included yet.
-- Celery/Redis is not included yet.
-- AI matching is not included yet.
-- Payment is manual tracking for MVP.
-- Local media storage is used first; S3 or Cloudflare R2 can be added later.
-- Sonner is used for global web toast notifications.
-- `react-native-toast-message` is used for global mobile toast notifications.
+* The web app remains the most complete live-data frontend.
+* The Expo mobile app now has real backend auth, logout, role redirects, creator campaign browsing/detail, creator apply, and creator My Applications.
+* Mobile brand campaign management and application review are the next major live-data mobile flows.
+* Some mobile screens are still prototype-first and use mock data until their API wiring is completed.
+* Stripe is not included yet.
+* Celery/Redis is not included yet.
+* AI matching is not included yet.
+* Payment is manual tracking for MVP.
+* Local media storage is used first; S3 or Cloudflare R2 can be added later.
+* Sonner is used for global web toast notifications.
+* `react-native-toast-message` is used for global mobile toast notifications.
 
 ## Next Development Steps
 
-1. Finish brand/creator profile live data loading and save states on web.
-2. Browser-test campaign CRUD as brand from create -> detail -> edit.
-3. Browser-test creator campaign browse/apply and duplicate application states.
-4. Finish brand application approval/rejection flow on web.
-5. Finish creator content submission flow on web.
-6. Finish brand content approval/revision flow on web.
-7. Finish manual payment tracking UI on web.
-8. Add mobile campaign browsing and campaign CRUD.
-9. Replace remaining non-campaign/application sample/static frontend data with React Query calls.
-10. Test full MVP flow.
+1. Connect mobile brand campaign list/detail to live backend data.
+2. Connect mobile brand application review to live backend data.
+3. Add mobile brand approve/reject application actions.
+4. Test creator application status update after brand approval/rejection.
+5. Connect mobile creator content submission flow after application approval.
+6. Connect mobile brand content approval/revision flow.
+7. Connect mobile manual payment tracking UI.
+8. Connect mobile notifications and profile setup/edit screens.
+9. Add pagination or infinite scroll for mobile creator applications and campaigns.
+10. Test the full MVP flow across web, mobile, and backend.

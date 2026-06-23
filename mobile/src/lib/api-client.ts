@@ -1,6 +1,16 @@
-import { create, isAxiosError, type AxiosError } from "axios";
+import {
+  create,
+  isAxiosError,
+  type AxiosError,
+  type InternalAxiosRequestConfig,
+} from "axios";
 
-import { getAccessToken } from "./token-storage";
+import {
+  clearTokens,
+  getAccessToken,
+  getRefreshToken,
+  setTokens,
+} from "./token-storage";
 
 export type NormalizedApiError = {
   message: string;
@@ -11,6 +21,19 @@ export type NormalizedApiError = {
 
 const fallbackBaseUrl = "http://localhost:8000/api";
 const configuredBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL || fallbackBaseUrl;
+const baseURL = configuredBaseUrl.replace(/\/$/, "");
+
+type RetryableRequestConfig = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+};
+
+type RefreshResponse = {
+  access: string;
+  refresh?: string;
+};
+
+let refreshPromise: Promise<string> | null = null;
+let unauthorizedHandler: (() => void) | null = null;
 
 if (__DEV__ && !process.env.EXPO_PUBLIC_API_BASE_URL) {
   console.warn(
@@ -19,12 +42,48 @@ if (__DEV__ && !process.env.EXPO_PUBLIC_API_BASE_URL) {
 }
 
 export const apiClient = create({
-  baseURL: configuredBaseUrl.replace(/\/$/, ""),
+  baseURL,
   headers: {
     "Content-Type": "application/json",
   },
   timeout: 15000,
 });
+
+const refreshClient = create({
+  baseURL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  timeout: 15000,
+});
+
+export function setUnauthorizedHandler(handler: (() => void) | null) {
+  unauthorizedHandler = handler;
+}
+
+async function refreshAccessToken() {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      const refresh = await getRefreshToken();
+
+      if (!refresh) {
+        throw new Error("No refresh token is available.");
+      }
+
+      const response = await refreshClient.post<RefreshResponse>("/auth/token/refresh/", {
+        refresh,
+      });
+      const nextRefresh = response.data.refresh ?? refresh;
+
+      await setTokens(response.data.access, nextRefresh);
+      return response.data.access;
+    })().finally(() => {
+      refreshPromise = null;
+    });
+  }
+
+  return refreshPromise;
+}
 
 apiClient.interceptors.request.use(async (config) => {
   const token = await getAccessToken();
@@ -35,6 +94,34 @@ apiClient.interceptors.request.use(async (config) => {
 
   return config;
 });
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error: unknown) => {
+    if (!isAxiosError(error) || error.response?.status !== 401 || !error.config) {
+      return Promise.reject(error);
+    }
+
+    const requestConfig = error.config as RetryableRequestConfig;
+    const isLoginRequest = requestConfig.url?.includes("/auth/token/");
+
+    if (requestConfig._retry || isLoginRequest) {
+      return Promise.reject(error);
+    }
+
+    requestConfig._retry = true;
+
+    try {
+      const access = await refreshAccessToken();
+      requestConfig.headers.Authorization = `Bearer ${access}`;
+      return apiClient(requestConfig);
+    } catch (refreshError) {
+      await clearTokens();
+      unauthorizedHandler?.();
+      return Promise.reject(refreshError);
+    }
+  },
+);
 
 function extractMessage(data: unknown, fallback: string) {
   if (!data || typeof data !== "object") {
@@ -73,14 +160,6 @@ function extractMessage(data: unknown, fallback: string) {
 }
 
 export function normalizeApiError(error: unknown): NormalizedApiError {
-  if (error && typeof error === "object" && "message" in error) {
-    const maybeError = error as NormalizedApiError;
-
-    if (typeof maybeError.message === "string") {
-      return maybeError;
-    }
-  }
-
   if (isAxiosError(error)) {
     const axiosError = error as AxiosError;
 
@@ -101,6 +180,14 @@ export function normalizeApiError(error: unknown): NormalizedApiError {
       details: data,
       status,
     };
+  }
+
+  if (error && typeof error === "object" && "message" in error) {
+    const maybeError = error as NormalizedApiError;
+
+    if (typeof maybeError.message === "string") {
+      return maybeError;
+    }
   }
 
   if (error instanceof Error) {

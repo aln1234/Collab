@@ -27,7 +27,8 @@ function AuthGate() {
   useEffect(() => {
     if (!isHydrated) return;
 
-    const currentGroup = segments[0];
+    const routeSegments = segments as readonly string[];
+    const currentGroup = routeSegments[0];
 
     const isHomeRoute = pathname === "/";
 
@@ -37,6 +38,8 @@ function AuthGate() {
     const isAdminRoute = currentGroup === "(admin)";
 
     const isProtectedRoute = isBrandRoute || isCreatorRoute || isAdminRoute;
+    const isPublicAuthRoute =
+      isAuthRoute && (routeSegments[1] === "login" || routeSegments[1] === "register");
 
     /**
      * NOT LOGGED IN
@@ -49,12 +52,12 @@ function AuthGate() {
      * - Brand/creator/admin pages
      */
     if (!isAuthenticated) {
-      if (isHomeRoute || isAuthRoute) {
+      if (isHomeRoute || isPublicAuthRoute) {
         return;
       }
 
-      if (isProtectedRoute) {
-        router.replace("/");
+      if (isProtectedRoute || isAuthRoute) {
+        router.replace("/(auth)/login");
       }
 
       return;

@@ -2,8 +2,9 @@ import { create } from "zustand";
 
 import { getCurrentUser, login, register } from "../features/auth/api";
 import type { MarketplaceUser, RegisterPayload, UserRole } from "../features/auth/types";
-import { normalizeApiError } from "../lib/api-client";
-import { clearTokens, getAccessToken, setTokens } from "../lib/token-storage";
+import { normalizeApiError, setUnauthorizedHandler } from "../lib/api-client";
+import { queryClient } from "../lib/query-client";
+import { clearTokens, getAccessToken, getRefreshToken, setTokens } from "../lib/token-storage";
 import { showSuccess } from "../lib/toast";
 
 type AuthState = {
@@ -41,6 +42,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true, error: null });
 
     try {
+      await clearTokens();
       const tokens = await login({ email, password });
       await setTokens(tokens.access, tokens.refresh);
 
@@ -107,9 +109,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const accessToken = await getAccessToken();
+      const [accessToken, refreshToken] = await Promise.all([
+        getAccessToken(),
+        getRefreshToken(),
+      ]);
 
-      if (!accessToken) {
+      if (!accessToken && !refreshToken) {
         set({
           user: null,
           isAuthenticated: false,
@@ -140,6 +145,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   async logout() {
     await clearTokens();
+    queryClient.clear();
     set({
       user: null,
       isAuthenticated: false,
@@ -150,3 +156,14 @@ export const useAuthStore = create<AuthState>((set) => ({
     showSuccess("Signed out");
   },
 }));
+
+setUnauthorizedHandler(() => {
+  queryClient.clear();
+  useAuthStore.setState({
+    user: null,
+    isAuthenticated: false,
+    isLoading: false,
+    isHydrated: true,
+    error: "Your session expired. Please sign in again.",
+  });
+});
