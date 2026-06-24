@@ -5,7 +5,7 @@ import { StatusBadge } from "@/components/status-badge";
 import type { Campaign } from "@/types/marketplace";
 
 export function CampaignCard({ campaign }: { campaign: Campaign }) {
-  const brandName = campaign.brand?.company_name ?? campaign.brandName ?? "Brand";
+  const brandName = campaign.brand.company_name;
   const budget = Number(campaign.budget);
 
   return (

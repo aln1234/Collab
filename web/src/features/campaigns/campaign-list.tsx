@@ -1,29 +1,43 @@
 "use client";
 
-import { ErrorMessage } from "@/components/error-message";
-import { LoadingState } from "@/components/loading-state";
+import { Megaphone } from "lucide-react";
+
+import {
+  WorkspaceEmptyState,
+  WorkspaceErrorState,
+  WorkspaceLoadingCards,
+} from "@/components/workspace/workspace-state";
 import { CampaignCard } from "@/features/campaigns/components/campaign-card";
-import { CampaignEmptyState } from "@/features/campaigns/components/campaign-empty-state";
 import { useCampaigns } from "@/features/campaigns/hooks";
 import { getApiErrorMessage } from "@/lib/api/errors";
 
 export function CampaignList({ brandView = false }: { brandView?: boolean }) {
   const query = useCampaigns({ mine: brandView });
-  const campaigns = query.data ?? [];
+  const campaigns = query.data?.results ?? [];
 
   if (query.isLoading) {
-    return <LoadingState label="Loading campaigns" />;
+    return <WorkspaceLoadingCards label="Loading campaigns…" className="sm:grid-cols-2 xl:grid-cols-3" />;
   }
 
   if (query.isError) {
-    return <ErrorMessage message={getApiErrorMessage(query.error, "Unable to load campaigns. Please try again.")} />;
+    return (
+      <WorkspaceErrorState
+        message={getApiErrorMessage(query.error, "Unable to load campaigns. Please try again.")}
+        onRetry={() => void query.refetch()}
+      />
+    );
   }
 
   if (!campaigns.length) {
     return (
-      <CampaignEmptyState
+      <WorkspaceEmptyState
+        icon={Megaphone}
         title={brandView ? "No brand campaigns yet" : "No open campaigns yet"}
-        description={brandView ? "Create your first campaign draft to start building your creator brief." : "Open campaigns will appear here once brands publish them."}
+        description={
+          brandView
+            ? "Create your first campaign brief to start receiving creator applications."
+            : "Open campaigns will appear here once brands publish them."
+        }
         actionHref={brandView ? "/brand/campaigns/new" : undefined}
         actionLabel={brandView ? "Create campaign" : undefined}
       />
@@ -31,7 +45,7 @@ export function CampaignList({ brandView = false }: { brandView?: boolean }) {
   }
 
   return (
-    <div className="grid gap-3">
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
       {campaigns.map((campaign) => (
         <CampaignCard
           key={campaign.id}

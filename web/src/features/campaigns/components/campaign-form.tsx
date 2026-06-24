@@ -46,24 +46,24 @@ export function CampaignForm({
   }, [form, initialValues]);
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-      <label className="grid gap-2 text-sm font-medium text-slate-700">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+      <label className="grid gap-1.5 text-xs font-bold text-slate-700">
         Title
-        <AppInput {...form.register("title", { required: true })} />
+        <AppInput className="rounded-lg focus:border-indigo-600 focus:ring-indigo-600/15" {...form.register("title", { required: true })} />
       </label>
       <div className="grid gap-4 sm:grid-cols-3">
-        <label className="grid gap-2 text-sm font-medium text-slate-700">
+        <label className="grid gap-1.5 text-xs font-bold text-slate-700">
           Budget
-          <AppInput type="number" min="0" step="0.01" {...form.register("budget", { required: true })} />
+          <AppInput className="rounded-lg focus:border-indigo-600 focus:ring-indigo-600/15" type="number" min="0" step="0.01" {...form.register("budget", { required: true })} />
         </label>
-        <label className="grid gap-2 text-sm font-medium text-slate-700">
+        <label className="grid gap-1.5 text-xs font-bold text-slate-700">
           Currency
-          <AppInput maxLength={3} {...form.register("currency", { required: true })} />
+          <AppInput className="rounded-lg focus:border-indigo-600 focus:ring-indigo-600/15" maxLength={3} {...form.register("currency", { required: true })} />
         </label>
-        <label className="grid gap-2 text-sm font-medium text-slate-700">
+        <label className="grid gap-1.5 text-xs font-bold text-slate-700">
           Status
           <select
-            className="h-11 rounded-md border border-slate-300 bg-white px-3 text-base shadow-sm focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15 sm:text-sm"
+            className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-base shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 sm:text-sm"
             {...form.register("status", { required: true })}
           >
             {campaignStatuses.map((status) => (
@@ -74,19 +74,19 @@ export function CampaignForm({
           </select>
         </label>
       </div>
-      <label className="grid gap-2 text-sm font-medium text-slate-700">
+      <label className="grid gap-1.5 text-xs font-bold text-slate-700">
         Deadline
-        <AppInput type="date" {...form.register("deadline", { required: true })} />
+        <AppInput className="rounded-lg focus:border-indigo-600 focus:ring-indigo-600/15" type="date" {...form.register("deadline", { required: true })} />
       </label>
-      <label className="grid gap-2 text-sm font-medium text-slate-700">
+      <label className="grid gap-1.5 text-xs font-bold text-slate-700">
         Description
-        <AppTextArea {...form.register("description", { required: true })} />
+        <AppTextArea className="rounded-lg focus:border-indigo-600 focus:ring-indigo-600/15" {...form.register("description", { required: true })} />
       </label>
-      <label className="grid gap-2 text-sm font-medium text-slate-700">
+      <label className="grid gap-1.5 text-xs font-bold text-slate-700">
         Deliverables
-        <AppTextArea {...form.register("deliverables", { required: true })} />
+        <AppTextArea className="rounded-lg focus:border-indigo-600 focus:ring-indigo-600/15" {...form.register("deliverables", { required: true })} />
       </label>
-      <AppButton type="submit" disabled={isSubmitting || form.formState.isSubmitting}>
+      <AppButton type="submit" disabled={isSubmitting || form.formState.isSubmitting} className="w-fit rounded-lg bg-indigo-600 hover:bg-indigo-700">
         {isSubmitting || form.formState.isSubmitting ? "Saving" : submitLabel}
       </AppButton>
     </form>

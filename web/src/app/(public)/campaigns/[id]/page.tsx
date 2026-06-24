@@ -47,7 +47,7 @@ export default function CampaignDetailPage() {
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
                   <p className="text-sm font-medium text-slate-500">Brand</p>
-                  <p className="mt-1 font-semibold text-slate-950">{campaign.brand?.company_name ?? "Brand"}</p>
+                  <p className="mt-1 font-semibold text-slate-950">{campaign.brand.company_name}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-500">Budget</p>

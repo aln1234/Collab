@@ -2,10 +2,8 @@
 
 import { useRouter } from "next/navigation";
 
-import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
-import { Navbar } from "@/components/layout/navbar";
-import { ScreenContainer } from "@/components/layout/screen-container";
-import { PageHeader } from "@/components/page-header";
+import { WorkspacePageHeader } from "@/components/workspace/workspace-page-header";
+import { WorkspacePageShell } from "@/components/workspace/workspace-page-shell";
 import { CampaignForm } from "@/features/campaigns/components/campaign-form";
 import { useCreateCampaign } from "@/features/campaigns/hooks";
 import type { CampaignPayload } from "@/features/campaigns/types";
@@ -27,13 +25,14 @@ export default function NewCampaignPage() {
   }
 
   return (
-    <>
-      <Navbar />
-      <ScreenContainer>
-        <PageHeader title="New campaign" description="Start as a draft and open it when the brief is ready." />
+    <WorkspacePageShell narrow>
+      <WorkspacePageHeader
+        title="New campaign"
+        subtitle="Start as a draft and open it when the brief is ready"
+      />
+      <div className="mt-5">
         <CampaignForm submitLabel="Save campaign" isSubmitting={createCampaign.isPending} onSubmit={onSubmit} />
-      </ScreenContainer>
-      <MobileBottomNav />
-    </>
+      </div>
+    </WorkspacePageShell>
   );
 }

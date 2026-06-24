@@ -1,31 +1,23 @@
-import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
-import { Navbar } from "@/components/layout/navbar";
-import { ScreenContainer } from "@/components/layout/screen-container";
-import { PageHeader } from "@/components/page-header";
-import { StatusBadge } from "@/components/status-badge";
+import { CreditCard } from "lucide-react";
 
-const payments = [
-  { campaign: "Home office setup", amount: "$850", status: "PENDING" as const },
-  { campaign: "Skincare drop", amount: "$1,200", status: "PAID" as const },
-];
+import { CreatorPageHeader } from "@/components/creator/creator-page-header";
+import { CreatorPageShell } from "@/components/creator/creator-page-shell";
+import { CreatorEmptyState } from "@/components/creator/creator-state-card";
 
 export default function CreatorPaymentsPage() {
   return (
-    <>
-      <Navbar />
-      <ScreenContainer>
-        <PageHeader title="Payments" description="Manual payout state for approved content." />
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-          {payments.map((item) => (
-            <div key={item.campaign} className="grid gap-2 border-b border-slate-200 p-4 last:border-b-0 sm:grid-cols-[1fr_auto_auto] sm:items-center">
-              <p className="font-medium text-slate-950">{item.campaign}</p>
-              <p className="font-medium text-slate-950">{item.amount}</p>
-              <StatusBadge status={item.status} />
-            </div>
-          ))}
-        </div>
-      </ScreenContainer>
-      <MobileBottomNav />
-    </>
+    <CreatorPageShell narrow>
+      <CreatorPageHeader
+        title="Payments"
+        subtitle="Track manually recorded payout status for approved work"
+      />
+      <div className="mt-5">
+        <CreatorEmptyState
+          icon={CreditCard}
+          title="Payment history is not available yet"
+          description="Verified payout records will appear here when the web payment view is connected."
+        />
+      </div>
+    </CreatorPageShell>
   );
 }

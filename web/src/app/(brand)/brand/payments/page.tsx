@@ -1,33 +1,71 @@
-import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
-import { Navbar } from "@/components/layout/navbar";
-import { ScreenContainer } from "@/components/layout/screen-container";
-import { PageHeader } from "@/components/page-header";
-import { StatusBadge } from "@/components/status-badge";
+"use client";
 
-const payments = [
-  { creator: "Priya Shah", campaign: "Fitness challenge", amount: "$1,600", status: "UNPAID" as const },
-  { creator: "Jon Bell", campaign: "Home office setup", amount: "$850", status: "PENDING" as const },
-  { creator: "Maya Chen", campaign: "Skincare drop", amount: "$1,200", status: "PAID" as const },
-];
+import { WalletCards } from "lucide-react";
+
+import { WorkspacePageHeader } from "@/components/workspace/workspace-page-header";
+import { WorkspacePageShell } from "@/components/workspace/workspace-page-shell";
+import {
+  WorkspaceEmptyState,
+  WorkspaceErrorState,
+  WorkspaceLoadingCards,
+} from "@/components/workspace/workspace-state";
+import { PaymentRecordCard } from "@/features/payments/components/payment-record-card";
+import { usePayments, useUpdatePaymentStatus } from "@/features/payments/hooks";
+import { getApiErrorMessage } from "@/lib/api/errors";
+import { showError, showSuccess } from "@/lib/toast";
+import type { PaymentStatus } from "@/types/marketplace";
 
 export default function BrandPaymentsPage() {
+  const paymentsQuery = usePayments();
+  const statusMutation = useUpdatePaymentStatus();
+
+  function handleStatusChange(paymentId: string, status: PaymentStatus, notes?: string) {
+    statusMutation.mutate(
+      { paymentId, status, notes },
+      {
+        onSuccess: () => showSuccess("Payment status updated"),
+        onError: (error) =>
+          showError("Unable to update payment", getApiErrorMessage(error, "Please try again.")),
+      },
+    );
+  }
+
   return (
-    <>
-      <Navbar />
-      <ScreenContainer>
-        <PageHeader title="Payments" description="Manual payment status for approved creator content." />
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-          {payments.map((item) => (
-            <div key={`${item.creator}-${item.campaign}`} className="grid gap-2 border-b border-slate-200 p-4 last:border-b-0 sm:grid-cols-[1fr_1fr_auto_auto] sm:items-center">
-              <p className="font-medium text-slate-950">{item.creator}</p>
-              <p className="text-sm text-slate-600">{item.campaign}</p>
-              <p className="font-medium text-slate-950">{item.amount}</p>
-              <StatusBadge status={item.status} />
-            </div>
-          ))}
-        </div>
-      </ScreenContainer>
-      <MobileBottomNav />
-    </>
+    <WorkspacePageShell>
+      <WorkspacePageHeader
+        title="Payments"
+        subtitle="Track the manual payment status for approved creator work."
+      />
+
+      <div className="mt-6">
+        {paymentsQuery.isLoading ? (
+          <WorkspaceLoadingCards count={4} className="sm:grid-cols-2" label="Loading payments…" />
+        ) : paymentsQuery.isError ? (
+          <WorkspaceErrorState
+            message={getApiErrorMessage(paymentsQuery.error, "We could not load payments.")}
+            onRetry={() => void paymentsQuery.refetch()}
+          />
+        ) : paymentsQuery.data?.results.length ? (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {paymentsQuery.data.results.map((payment) => (
+              <PaymentRecordCard
+                key={payment.id}
+                payment={payment}
+                isUpdating={
+                  statusMutation.isPending && statusMutation.variables?.paymentId === payment.id
+                }
+                onStatusChange={handleStatusChange}
+              />
+            ))}
+          </div>
+        ) : (
+          <WorkspaceEmptyState
+            icon={WalletCards}
+            title="No payment records yet"
+            description="Payment records will appear here after creator work reaches the payment stage."
+          />
+        )}
+      </div>
+    </WorkspacePageShell>
   );
 }

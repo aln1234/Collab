@@ -17,15 +17,22 @@ const statusStyles: Record<string, string> = {
   DISPUTED: "bg-rose-50 text-rose-800 ring-rose-200",
 };
 
-export function StatusBadge({ status }: { status: MarketplaceStatus }) {
+export function StatusBadge({
+  status,
+  compact = false,
+}: {
+  status: MarketplaceStatus;
+  compact?: boolean;
+}) {
   return (
     <span
       className={cn(
-        "inline-flex h-7 items-center rounded-full px-2.5 text-xs font-medium ring-1",
+        "inline-flex items-center rounded-full font-bold ring-1",
+        compact ? "h-6 px-2 text-[10px]" : "h-7 px-2.5 text-xs",
         statusStyles[status],
       )}
     >
-      {status.replaceAll("_", " ")}
+      <span className="capitalize">{status.replaceAll("_", " ").toLowerCase()}</span>
     </span>
   );
 }

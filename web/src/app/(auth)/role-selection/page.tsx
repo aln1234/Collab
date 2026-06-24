@@ -6,9 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { getDashboardForRole, useAuthStore } from "@/features/auth/store";
-import { Navbar } from "@/components/layout/navbar";
-import { ScreenContainer } from "@/components/layout/screen-container";
-import { PageHeader } from "@/components/page-header";
+import { AuthPageShell } from "@/components/auth/auth-page-shell";
 
 export default function RoleSelectionPage() {
   const router = useRouter();
@@ -23,23 +21,25 @@ export default function RoleSelectionPage() {
   }, [hasInitialized, isInitializing, router, user]);
 
   return (
-    <>
-      <Navbar />
-      <ScreenContainer narrow className="place-content-center">
-        <PageHeader title="Choose your workspace" description="Go to the side of the marketplace you want to work in now." />
+    <AuthPageShell>
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-950/[0.05] sm:p-6">
+        <header>
+          <h1 className="text-2xl font-black tracking-tight text-slate-950">Choose your workspace</h1>
+          <p className="mt-1 text-sm text-slate-500">Select the side of Connect you want to open.</p>
+        </header>
         <div className="grid gap-3">
-          <Link href="/creator/dashboard" className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm hover:border-teal-300">
-            <UserRound className="h-6 w-6 text-teal-700" />
+          <Link href="/creator/dashboard" className="mt-5 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-indigo-300 hover:bg-indigo-50/40">
+            <UserRound className="h-5 w-5 text-indigo-600" />
             <h2 className="mt-3 font-semibold text-slate-950">Creator</h2>
             <p className="mt-1 text-sm leading-6 text-slate-600">Browse campaigns, apply, submit content, and track payment status.</p>
           </Link>
-          <Link href="/brand/dashboard" className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm hover:border-teal-300">
-            <Building2 className="h-6 w-6 text-teal-700" />
+          <Link href="/brand/dashboard" className="rounded-xl border border-slate-200 bg-white p-4 transition hover:border-indigo-300 hover:bg-slate-50">
+            <Building2 className="h-5 w-5 text-indigo-600" />
             <h2 className="mt-3 font-semibold text-slate-950">Brand</h2>
             <p className="mt-1 text-sm leading-6 text-slate-600">Create campaigns, review creators and submissions, and manage payment status.</p>
           </Link>
         </div>
-      </ScreenContainer>
-    </>
+      </div>
+    </AuthPageShell>
   );
 }

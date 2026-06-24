@@ -1,32 +1,77 @@
-import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
-import { Navbar } from "@/components/layout/navbar";
-import { ScreenContainer } from "@/components/layout/screen-container";
-import { PageHeader } from "@/components/page-header";
-import { StatusBadge } from "@/components/status-badge";
+"use client";
 
-const applications = [
-  { creator: "Maya Chen", campaign: "Skincare drop", status: "PENDING" as const },
-  { creator: "Jon Bell", campaign: "Home office setup", status: "APPROVED" as const },
-  { creator: "Priya Shah", campaign: "Fitness challenge", status: "REJECTED" as const },
-];
+import { ClipboardList } from "lucide-react";
+
+import {
+  WorkspaceEmptyState,
+  WorkspaceErrorState,
+  WorkspaceLoadingCards,
+} from "@/components/workspace/workspace-state";
+import { WorkspacePageHeader } from "@/components/workspace/workspace-page-header";
+import { WorkspacePageShell } from "@/components/workspace/workspace-page-shell";
+import { BrandApplicationCard } from "@/features/applications/components/brand-application-card";
+import { useBrandApplications, useUpdateApplicationStatus } from "@/features/applications/hooks";
+import { getApiErrorMessage } from "@/lib/api/errors";
+import { showError, showSuccess } from "@/lib/toast";
+import type { ApplicationStatus } from "@/types/marketplace";
 
 export default function BrandApplicationsPage() {
+  const applicationsQuery = useBrandApplications();
+  const decisionMutation = useUpdateApplicationStatus();
+
+  function handleDecision(
+    applicationId: string,
+    status: Extract<ApplicationStatus, "APPROVED" | "REJECTED">,
+  ) {
+    decisionMutation.mutate(
+      { applicationId, status },
+      {
+        onSuccess: () => showSuccess(status === "APPROVED" ? "Application approved" : "Application rejected"),
+        onError: (error) =>
+          showError("Unable to update application", getApiErrorMessage(error, "Please try again.")),
+      },
+    );
+  }
+
   return (
-    <>
-      <Navbar />
-      <ScreenContainer>
-        <PageHeader title="Applications" description="Approve or reject creators who applied to your campaigns." />
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-          {applications.map((item) => (
-            <div key={`${item.creator}-${item.campaign}`} className="grid gap-2 border-b border-slate-200 p-4 last:border-b-0 sm:grid-cols-[1fr_1fr_auto] sm:items-center">
-              <p className="font-medium text-slate-950">{item.creator}</p>
-              <p className="text-sm text-slate-600">{item.campaign}</p>
-              <StatusBadge status={item.status} />
-            </div>
-          ))}
-        </div>
-      </ScreenContainer>
-      <MobileBottomNav />
-    </>
+    <WorkspacePageShell>
+      <WorkspacePageHeader
+        title="Applications"
+        subtitle="Review the creators who want to work on your campaigns."
+      />
+
+      <div className="mt-6">
+        {applicationsQuery.isLoading ? (
+          <WorkspaceLoadingCards count={4} className="sm:grid-cols-2" label="Loading applications…" />
+        ) : applicationsQuery.isError ? (
+          <WorkspaceErrorState
+            message={getApiErrorMessage(applicationsQuery.error, "We could not load applications.")}
+            onRetry={() => void applicationsQuery.refetch()}
+          />
+        ) : applicationsQuery.data?.results.length ? (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {applicationsQuery.data.results.map((application) => (
+              <BrandApplicationCard
+                key={application.id}
+                application={application}
+                isUpdating={
+                  decisionMutation.isPending &&
+                  decisionMutation.variables?.applicationId === application.id
+                }
+                onDecision={handleDecision}
+              />
+            ))}
+          </div>
+        ) : (
+          <WorkspaceEmptyState
+            icon={ClipboardList}
+            title="No applications yet"
+            description="Applications will appear here when creators apply to your open campaigns."
+            actionHref="/brand/campaigns"
+            actionLabel="View campaigns"
+          />
+        )}
+      </div>
+    </WorkspacePageShell>
   );
 }

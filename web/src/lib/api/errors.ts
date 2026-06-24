@@ -94,3 +94,46 @@ export function getApiErrorMessage(error: unknown, fallback: string) {
   const apiError = normalizeApiError(error);
   return apiError.message || fallback;
 }
+
+export function getCampaignLoadErrorMessage(error: unknown) {
+  const apiError = normalizeApiError(error);
+
+  if (apiError.status === 404) {
+    return "This campaign could not be found or is no longer available.";
+  }
+
+  return apiError.message || "We could not load this campaign. Please try again.";
+}
+
+export function getApplyErrorMessage(error: unknown) {
+  const apiError = normalizeApiError(error);
+  const message = apiError.message.trim();
+  const normalizedMessage = message.toLowerCase();
+
+  if (apiError.status === 401 || apiError.status === 403) {
+    return "Please log in again to apply.";
+  }
+
+  if (apiError.status === 404) {
+    return "This campaign could not be found.";
+  }
+
+  if (normalizedMessage.includes("already applied") || normalizedMessage.includes("duplicate")) {
+    return "You have already applied to this campaign.";
+  }
+
+  if (
+    normalizedMessage.includes("not open") ||
+    normalizedMessage.includes("closed") ||
+    normalizedMessage.includes("inactive") ||
+    normalizedMessage.includes("no longer accepting")
+  ) {
+    return "This campaign is no longer accepting applications.";
+  }
+
+  if (apiError.code === "NETWORK_ERROR") {
+    return "We could not reach the server. Check your connection and try again.";
+  }
+
+  return message || "Something went wrong while applying. Please try again.";
+}

@@ -6,11 +6,9 @@ import { useParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 import { ErrorMessage } from "@/components/error-message";
-import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
-import { Navbar } from "@/components/layout/navbar";
-import { ScreenContainer } from "@/components/layout/screen-container";
 import { LoadingState } from "@/components/loading-state";
-import { PageHeader } from "@/components/page-header";
+import { WorkspacePageHeader } from "@/components/workspace/workspace-page-header";
+import { WorkspacePageShell } from "@/components/workspace/workspace-page-shell";
 import { CampaignForm } from "@/features/campaigns/components/campaign-form";
 import { useCampaign, useUpdateCampaign } from "@/features/campaigns/hooks";
 import type { CampaignPayload } from "@/features/campaigns/types";
@@ -50,26 +48,34 @@ export default function EditBrandCampaignPage() {
   }
 
   return (
-    <>
-      <Navbar />
-      <ScreenContainer>
-        <Link href={`/brand/campaigns/${campaignId}`} className="inline-flex items-center gap-2 text-sm font-medium text-slate-600">
-          <ArrowLeft className="h-4 w-4" />
-          Campaign detail
-        </Link>
-        <PageHeader title="Edit campaign" description="Update the brief, budget, deadline, and publishing status." />
-        {isLoading ? <LoadingState label="Loading campaign" /> : null}
-        {isError ? <ErrorMessage message={getApiErrorMessage(error, "Unable to load this campaign.")} /> : null}
-        {campaign ? (
+    <WorkspacePageShell narrow>
+      <Link
+        href={`/brand/campaigns/${campaignId}`}
+        className="inline-flex items-center gap-2 text-sm font-medium text-slate-600"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Campaign detail
+      </Link>
+      <div className="mt-4">
+        <WorkspacePageHeader
+          title="Edit campaign"
+          subtitle="Update the brief, budget, deadline, and publishing status"
+        />
+      </div>
+      {isLoading ? <LoadingState label="Loading campaign" /> : null}
+      {isError ? (
+        <ErrorMessage message={getApiErrorMessage(error, "Unable to load this campaign.")} />
+      ) : null}
+      {campaign ? (
+        <div className="mt-5">
           <CampaignForm
             initialValues={initialValues}
             submitLabel="Update campaign"
             isSubmitting={updateCampaign.isPending}
             onSubmit={onSubmit}
           />
-        ) : null}
-      </ScreenContainer>
-      <MobileBottomNav />
-    </>
+        </div>
+      ) : null}
+    </WorkspacePageShell>
   );
 }

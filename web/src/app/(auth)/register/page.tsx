@@ -8,10 +8,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { getDashboardForRole, useAuthStore } from "@/features/auth/store";
+import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { ErrorMessage } from "@/components/error-message";
-import { Navbar } from "@/components/layout/navbar";
-import { ScreenContainer } from "@/components/layout/screen-container";
-import { PageHeader } from "@/components/page-header";
 import { AppButton } from "@/components/ui/app-button";
 import { AppInput } from "@/components/ui/app-input";
 import { getApiErrorMessage } from "@/lib/api/errors";
@@ -50,27 +48,28 @@ export default function RegisterPage() {
   }
 
   return (
-    <>
-      <Navbar />
-      <ScreenContainer narrow className="place-content-center">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-5 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <PageHeader title="Create account" description="Start as a creator or brand. You can refine your profile next." />
-          <label className="grid gap-2 text-sm font-medium text-slate-700">
+    <AuthPageShell>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-950/[0.05] sm:p-6">
+          <header>
+            <h1 className="text-2xl font-black tracking-tight text-slate-950">Create your account</h1>
+            <p className="mt-1 text-sm text-slate-500">Join Connect as a creator or brand.</p>
+          </header>
+          <label className="grid gap-1.5 text-xs font-bold text-slate-700">
             Full name
-            <AppInput autoComplete="name" {...form.register("full_name")} />
+            <AppInput className="rounded-lg focus:border-indigo-600 focus:ring-indigo-600/15" autoComplete="name" {...form.register("full_name")} />
           </label>
-          <label className="grid gap-2 text-sm font-medium text-slate-700">
+          <label className="grid gap-1.5 text-xs font-bold text-slate-700">
             Email
-            <AppInput type="email" autoComplete="email" {...form.register("email")} />
+            <AppInput className="rounded-lg focus:border-indigo-600 focus:ring-indigo-600/15" type="email" autoComplete="email" {...form.register("email")} />
           </label>
-          <label className="grid gap-2 text-sm font-medium text-slate-700">
+          <label className="grid gap-1.5 text-xs font-bold text-slate-700">
             Password
-            <AppInput type="password" autoComplete="new-password" {...form.register("password")} />
+            <AppInput className="rounded-lg focus:border-indigo-600 focus:ring-indigo-600/15" type="password" autoComplete="new-password" {...form.register("password")} />
           </label>
-          <label className="grid gap-2 text-sm font-medium text-slate-700">
+          <label className="grid gap-1.5 text-xs font-bold text-slate-700">
             Role
             <select
-              className="h-11 rounded-md border border-slate-300 bg-white px-3 text-base shadow-sm focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15 sm:text-sm"
+              className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-base shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 sm:text-sm"
               {...form.register("role")}
             >
               <option value="CREATOR">Creator</option>
@@ -78,17 +77,16 @@ export default function RegisterPage() {
             </select>
           </label>
           <ErrorMessage message={apiError} />
-          <AppButton type="submit" disabled={form.formState.isSubmitting}>
+          <AppButton type="submit" disabled={form.formState.isSubmitting} className="rounded-lg bg-indigo-600 hover:bg-indigo-700">
             {form.formState.isSubmitting ? "Creating account" : "Create account"}
           </AppButton>
           <p className="text-center text-sm text-slate-600">
             Already have an account?{" "}
-            <Link href="/login" className="font-medium text-teal-700">
+            <Link href="/login" className="font-bold text-indigo-600 hover:text-indigo-700">
               Sign in
             </Link>
           </p>
         </form>
-      </ScreenContainer>
-    </>
+    </AuthPageShell>
   );
 }

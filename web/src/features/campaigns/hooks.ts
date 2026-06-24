@@ -1,16 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { createCampaign, getCampaign, listCampaigns, updateCampaign } from "@/features/campaigns/api";
+import type { ListCampaignsParams } from "@/features/campaigns/api";
 import type { CampaignPayload } from "@/features/campaigns/types";
 
 export const campaignKeys = {
   all: ["campaigns"] as const,
   lists: () => [...campaignKeys.all, "list"] as const,
-  list: (filters: { mine?: boolean } = {}) => [...campaignKeys.lists(), filters] as const,
+  list: (filters: ListCampaignsParams = {}) => [...campaignKeys.lists(), filters] as const,
   detail: (id: string) => [...campaignKeys.all, "detail", id] as const,
 };
 
-export function useCampaigns(filters: { mine?: boolean } = {}) {
+export function useCampaigns(filters: ListCampaignsParams = {}) {
   return useQuery({
     queryKey: campaignKeys.list(filters),
     queryFn: () => listCampaigns(filters),

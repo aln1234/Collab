@@ -17,11 +17,14 @@ export interface User {
 
 export interface BrandProfile {
   id: string;
+  email: string;
   company_name: string;
   website: string;
   industry: string;
   description: string;
-  logo?: string | null;
+  logo: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export type { Campaign, CampaignPayload } from "@/features/campaigns/types";
